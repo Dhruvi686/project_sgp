@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Helper function to check if user is faculty
+    function isFaculty() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'faculty';
+    }
+
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isFaculty() || isAdmin());
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Daily Menu - everyone logged in can see
+    match /daily_menu/{menuId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Menu Collection - faculty can read
+    match /menu/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Orders Collection
+    match /orders/{orderId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && 
+        (resource.data.facultyId == request.auth.uid || isFaculty());
+    }
+
+    // Receipts Collection
+    match /receipts/{receiptId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && 
+        (resource.data.facultyId == request.auth.uid || isFaculty());
+    }
+
+    // Admin Notifications
+    match /admin_notifications/{notifId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Faculty Notifications
+    match /faculty_notifications/{notifId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Coupons Collection
+    match /coupons/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Payments Collection
+    match /payments/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Event Orders
+    match /event_orders/{eventId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Event Details
+    match /event_details/{eventId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+  }
+} 
