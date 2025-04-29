@@ -12,7 +12,7 @@ class HodDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Faculty Dashboard'),
+        title: const Text('Hod Dashboard'),
         backgroundColor: Colors.teal,
         actions: [
           IconButton(
@@ -36,7 +36,7 @@ class HodDashboard extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.event_available),
             label: const Text("Approve Event Orders"),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
             onPressed: () {
               Navigator.push(
                 context,

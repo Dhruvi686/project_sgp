@@ -23,12 +23,7 @@ class BookFoodScreen extends StatelessWidget {
             child: const Text('Monthly Package'),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Navigate to Event Booking Screen
-            },
-            child: const Text('For Any Event'),
-          ),
+       
           const SizedBox(height: 20),
           ElevatedButton(
   onPressed: () {
@@ -42,17 +37,7 @@ class BookFoodScreen extends StatelessWidget {
           const SizedBox(height: 30),
 
           // 🔽 NEW: View My Coupon Button
-          ElevatedButton.icon(
-            icon: Icon(Icons.card_giftcard),
-            label: Text("View My Coupon"),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ViewCouponPage()),
-              );
-            },
-          ),
+          
         ],
       ),
     );
